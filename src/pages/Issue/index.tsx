@@ -1,11 +1,11 @@
 import { About } from './components/About'
-import { Readme } from './components/Readme'
+import { Post } from './components/Post'
 
-export function Respository() {
+export function Issue() {
   return (
     <div>
       <About />
-      <Readme />
+      <Post />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { ContainerReadme, ReadingContent } from './style'
 
-export function Readme() {
+export function Post() {
   return (
     <ContainerReadme>
       <ReadingContent>
