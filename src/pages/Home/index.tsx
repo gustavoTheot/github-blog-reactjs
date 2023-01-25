@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Profile } from '../../components/Profile'
 import { ProfilesContext } from '../../context/ProfileContext'
-import { Repositories } from './components/Repositories'
+import { Issues } from './components/Issues'
 import { ContainerHome, CountRepositories, SearchForm } from './style'
 
 import * as z from 'zod'
@@ -15,7 +15,7 @@ const searchFormSchema = z.object({
 type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function Home() {
-  const { repositores, fetchIssuesGit } = useContext(ProfilesContext)
+  const { issue, fetchIssuesData } = useContext(ProfilesContext)
 
   const {
     register,
@@ -25,11 +25,9 @@ export function Home() {
     resolver: zodResolver(searchFormSchema),
   })
 
-  const repositoresLength = repositores.length
-
   function handleSearchGitData(data: SearchFormInputs) {
     const query = `${data.query}`
-    fetchIssuesGit(query)
+    fetchIssuesData(query)
   }
 
   return (
@@ -39,7 +37,7 @@ export function Home() {
       <div>
         <CountRepositories>
           <h1>Publicações</h1>
-          <span>{repositoresLength} publicações</span>
+          <span>{issue.total_count} publicações</span>
         </CountRepositories>
         <SearchForm onSubmit={handleSubmit(handleSearchGitData)}>
           <input
@@ -49,7 +47,7 @@ export function Home() {
           />
         </SearchForm>
       </div>
-      <Repositories />
+      <Issues />
     </ContainerHome>
   )
 }

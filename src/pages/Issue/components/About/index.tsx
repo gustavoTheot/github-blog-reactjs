@@ -16,13 +16,8 @@ import {
 } from './style'
 
 export function About() {
-  const { profiles } = useContext(ProfilesContext)
+  const { selectedIssue, profile } = useContext(ProfilesContext)
 
-  /*
-  async function fetchRepository(){
-    const response = await api.get('/users/gustavoTheot/repos/')
-  }
-  */
   return (
     <ContainerAboutRepository>
       <HeaderRepository>
@@ -31,26 +26,29 @@ export function About() {
           VOLTAR
         </NavLink>
 
-        <a href="#" target="_blank" rel="noreferrer">
+        <a href={selectedIssue.html_url} target="_blank" rel="noreferrer">
           VER NO GITHUB
           <ArrowUpRight />
         </a>
       </HeaderRepository>
 
       <TitleRepository>
-        <h1>Titulo do repositorio</h1>
+        <h1>{selectedIssue.title}</h1>
       </TitleRepository>
 
       <DescriptionRepository>
         <ul>
           <li>
-            <GithubLogo /> {profiles.github}
+            <GithubLogo /> {profile.github}
           </li>
+
           <li>
-            <Calendar /> {profiles.work === null ? 'Null' : profiles.work}
+            <Calendar />
+            {selectedIssue.created_at}
           </li>
+
           <li>
-            <ChatCircle size={16} weight="bold" /> {profiles.followers}
+            <ChatCircle size={16} weight="bold" /> {selectedIssue.comments}
           </li>
         </ul>
       </DescriptionRepository>

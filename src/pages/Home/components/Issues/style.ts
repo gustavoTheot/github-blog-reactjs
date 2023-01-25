@@ -1,6 +1,15 @@
 import styled from 'styled-components'
 
 export const ListRepositories = styled.ul`
+  a {
+    text-decoration: none;
+    overflow: hidden;
+
+    li:hover {
+      border: 2px solid ${(props) => props.theme['base-border']};
+    }
+  }
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
@@ -11,6 +20,7 @@ export const ListRepositories = styled.ul`
     list-style: none;
 
     padding: 2rem;
+    border: 2px solid transparent;
     border-radius: 10px;
 
     background-color: ${(props) => props.theme['base-post']};

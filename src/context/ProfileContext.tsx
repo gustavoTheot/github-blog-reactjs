@@ -35,25 +35,24 @@ interface IssueData {
   total_count: number
 }
 
-/*
-interface SelectedIssue{
+interface SelectedIssue {
   title: string
   user: {
     login: string
-  },
-  created_at: Date
+  }
+  created_at: string
   comments: string
   body: string
   html_url: string
 }
-*/
 
 interface ProfileContextType {
   profile: Profile
   issue: IssueData
   issuesArray: IssuesArray[]
-  fetchProfile: () => Promise<void>
+  selectedIssue: SelectedIssue
   fetchIssuesData: (query?: string) => Promise<void>
+  fetchSelectedIssue: (query?: string) => Promise<void>
 }
 
 interface ProfileProviderProps {
@@ -64,7 +63,11 @@ export const ProfilesContext = createContext({} as ProfileContextType)
 
 export function ProfileProvider({ children }: ProfileProviderProps) {
   const [profile, setProfile] = useState<Profile>({} as Profile)
+  const [issuesArray, setIssuesArray] = useState<IssuesArray[]>([])
   const [issue, setIssue] = useState<IssueData>({} as IssueData)
+  const [selectedIssue, setSelectedIssue] = useState<SelectedIssue>(
+    {} as SelectedIssue,
+  )
 
   async function fetchProfile() {
     const response = await api.get('/users/gustavoTheot')
@@ -81,18 +84,31 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     })
   }
 
-  const issuesArray: IssuesArray[] = issue.items
-
   async function fetchIssuesData(query?: string) {
     const response = await api.get(
-      `/search/issues?q=${query}%20repo:gustavoTheot/github-blog-reactjs`,
+      `https://api.github.com/search/issues?q=${
+        query || ''
+      }repo:gustavoTheot/github-blog-reactjs`,
     )
 
+    setIssuesArray(response.data.items)
     setIssue(response.data)
+  }
+
+  async function fetchSelectedIssue(query?: string) {
+    const response = await api.get(
+      `/repos/gustavoTheot/github-blog-reactjs/issues/${query}`,
+    )
+
+    setSelectedIssue(response.data)
   }
 
   useEffect(() => {
     fetchProfile()
+  }, [])
+
+  useEffect(() => {
+    fetchIssuesData()
   }, [])
 
   return (
@@ -101,8 +117,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         profile,
         issue,
         issuesArray,
-        fetchProfile,
+        selectedIssue,
         fetchIssuesData,
+        fetchSelectedIssue,
       }}
     >
       {children}
